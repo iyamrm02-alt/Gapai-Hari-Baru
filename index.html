@@ -1,0 +1,226 @@
+<div id="gapai-app-root">
+    
+    <div id="page-1" class="app-page active">
+        <div class="main-card-locked">
+            <div class="header-compact">
+                <h2 class="brand-title">Gapai <span class="accent">Hari Baru</span></h2>
+                <p>Jadikan profilmu lebih menarik & profesional</p>
+            </div>
+
+            <div class="scroll-content">
+                <div class="form-section-compact">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="pfp-target-sm" onclick="document.getElementById('file-in').click()">
+                            <img id="pfp-v" style="display:none; width:100%; height:100%; object-fit:cover;">
+                            <div id="pfp-i">📸</div>
+                            <div id="upload-loading" class="loader-v23"></div>
+                        </div>
+                        <div style="flex: 1;">
+                            <span id="status-text" style="font-size:9px; color:#94a3b8; font-weight:800;">STATUS: READY</span>
+                            <input type="text" id="in-n" class="gapai-input-nozoom" placeholder="Nama Lengkap">
+                        </div>
+                    </div>
+                    <input type="file" id="file-in" accept="image/*" onchange="uploadToImgur(this)" style="display:none">
+                    <input type="text" id="in-b" class="gapai-input-nozoom" placeholder="Bio Singkat / Slogan">
+                </div>
+
+                <div class="form-section-compact">
+                    <label class="section-label">SOCIAL LINKS HUB</label>
+                    <div id="input-list">
+                        <div class="l-row">
+                            <input type="text" class="lt nozoom" placeholder="Label">
+                            <input type="text" class="lu nozoom" placeholder="URL">
+                        </div>
+                    </div>
+                    <button class="add-btn-sm" onclick="addL()">+ Add Link</button>
+                </div>
+            </div>
+
+            <div class="editor-footer-fixed">
+                <input type="color" id="main-c" value="#6366f1">
+               <button id="btn-preview" class="btn-primary" onclick="render(true)">PREVIEW PROFIL →</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-2" class="app-page">
+        <div class="viewer-card-final">
+            <div class="v-header">
+                <div class="avatar-box">
+                    <img id="out-p" src="" style="width:100%; height:100%; object-fit:cover; display:block;">
+                </div>
+                <h2 id="out-n">Name</h2>
+                <p id="out-b">Biography</p>
+            </div>
+            <div id="out-l" class="v-grid-final"></div>
+            <div class="viral-cta" onclick="location.href=location.pathname">
+                Built with <span class="gapai-brand">Gapai Hari Baru</span> →
+            </div>
+        </div>
+<div class="nav-viewer-final">
+            <button onclick="goTo(1)" class="btn-subtle">Edit</button>
+            <button onclick="openShare()" class="btn-dark">Share Link</button>
+        </div>
+    </div>
+
+    <div id="m-sh" class="modal-overlay">
+        <div class="modal-box-final">
+            <h3>Link Siap Disebar! 🌍</h3>
+            <input type="text" id="f-url" readonly style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:15px; text-align:center;">
+            <button class="btn-copy" onclick="copyIt()">SALIN LINK</button>
+            <button onclick="document.getElementById('m-sh').style.display='none'" class="btn-close">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* STYLE IRON-LOCK KESUKAAN KAMU */
+    html, body { margin:0; padding:0; height:100%; width:100%; overflow:hidden !important; position:fixed; touch-action: manipulation; overscroll-behavior:none; background:#f8f9fb; font-family:'Inter', sans-serif; }
+    #gapai-app-root { position:fixed; inset:0; z-index:9999999; background:#f8f9fb; display:flex; align-items:center; justify-content:center; overflow:hidden; width:100vw; height:100dvh; }
+    .app-page { display:none; width:100%; height:100%; align-items:center; justify-content:center; padding:10px; box-sizing:border-box; }
+.app-page.active { display:flex; }
+    .main-card-locked { background:#fff; width:100%; max-width:360px; height:80dvh; border-radius:25px; box-shadow:0 30px 60px rgba(0,0,0,0.05); display:flex; flex-direction:column; overflow:hidden; position:relative; border:1px solid #f1f5f9; box-sizing:border-box; }
+    .header-compact { padding:15px 20px; text-align:left; flex-shrink:0; }
+    .brand-title { font-size:20px; margin:0; font-weight:900; color:#0f172a; letter-spacing:-1px; }
+    .accent { color:#6366f1; }
+    .header-compact p { font-size:11px; color:#94a3b8; margin:4px 0 0; font-weight:500; }
+    .scroll-content { flex:1; overflow-y:auto; overflow-x:hidden; padding:0 15px 80px; touch-action:pan-y; width:100%; box-sizing:border-box; }
+    .form-section-compact { background:#fafbfc; border-radius:15px; padding:12px; margin-bottom:10px; border:1px solid #f1f5f9; width:100%; box-sizing:border-box; }
+    .section-label { font-size:9px; font-weight:800; color:#94a3b8; display:block; margin-bottom:8px; letter-spacing:1px; }
+    .loader-v23 { display:none; position:absolute; width:20px; height:20px; border:3px solid #6366f1; border-top-color:transparent; border-radius:50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .pfp-target-sm { width:55px; height:55px; border-radius:50%; border:1.5px dashed #6366f1; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden; position:relative; }
+    .gapai-input-nozoom { width:100%; padding:8px 10px; margin-bottom:6px; border:1px solid #e2e8f0; border-radius:8px; font-size:16px; box-sizing:border-box; outline:none; }
+    .l-row { display:flex; gap:5px; margin-bottom:5px; width:100%; }
+    .l-row input.nozoom { flex:1; padding:8px; border-radius:8px; border:1px solid #e2e8f0; font-size:16px; box-sizing:border-box; }
+    .add-btn-sm { width:100%; background:none; border:1px dashed #cbd5e1; color:#94a3b8; padding:8px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:10px; }
+    .editor-footer-fixed { position:absolute; bottom:0; left:0; right:0; background:rgba(255,255,255,0.98); padding:12px 15px; display:flex; gap:10px; border-top:1px solid #f1f5f9; }
+    .btn-primary { flex:1; background:#0f172a; color:#fff; border:none; padding:12px; border-radius:12px; font-weight:800; cursor:pointer; font-size:13px; }
+    #main-c { width:40px; height:40px; border:none; background:none; cursor:pointer; }
+    .viewer-card-final { background:#fff; width:100%; max-width:340px; border-radius:40px; padding:45px 25px; text-align:center; box-shadow:0 40px 100px rgba(0,0,0,0.04); border:1px solid #f1f5f9; box-sizing:border-box; }
+  .avatar-box { width:80px; height:80px; margin:0 auto 15px; border-radius:50%; border:4px solid #f8f9fb; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#eee; }
+    .v-grid-final { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
+    .v-item-f { padding:14px 5px; border-radius:15px; text-decoration:none; color:#fff; font-weight:700; font-size:12px; }
+    .viral-cta { margin-top:40px; font-size:10px; color:#94a3b8; font-weight:600; cursor:pointer; }
+    .gapai-brand { font-weight:900; color:#0f172a; }
+    .nav-viewer-final { position:fixed; bottom:30px; display:flex; gap:12px; }
+    .nav-viewer-final button { padding:10px 25px; border-radius:12px; border:none; font-weight:700; cursor:pointer; font-size:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1); }
+    .btn-subtle { background:#fff; color:#64748b; }
+    .btn-dark { background:#0f172a; color:#fff; }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.9); z-index:999999999; align-items:center; justify-content:center; padding:20px; }
+    .modal-box-final { background:#fff; padding:30px; border-radius:30px; width:100%; max-width:320px; text-align:center; }
+    .btn-copy { width:100%; background:#6366f1; color:#fff; padding:15px; border-radius:12px; border:none; font-weight:bold; cursor:pointer; }
+    .btn-close { background:none; border:none; color:#94a3b8; margin-top:10px; cursor:pointer; font-size:12px; }
+</style>
+
+<script>
+    let cloudImageUrl = "";
+
+    async function uploadToImgur(input) {
+        if (!input.files || !input.files[0]) return;
+        const status = document.getElementById('status-text');
+        const loader = document.getElementById('upload-loading');
+        const pfpImg = document.getElementById('pfp-v');
+        const pfpIcon = document.getElementById('pfp-i');
+
+        // Tampilkan di Editor Langsung
+  // Tampilkan di Editor Langsung
+        pfpImg.src = URL.createObjectURL(input.files[0]);
+        pfpImg.style.display = "block"; pfpIcon.style.display = "none";
+        
+        status.innerText = "UPLOADING..."; 
+        loader.style.display = "block";
+
+        const formData = new FormData();
+        formData.append("image", input.files[0]);
+
+        try {
+            // PAKAI IMGUR API PUBLIK (Tanpa Key)
+            const res = await fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: { Authorization: "Client-ID 546c25a59c58ad7" },
+                body: formData
+            });
+            const result = await res.json();
+            if (result.success) {
+                cloudImageUrl = result.data.link;
+                status.innerText = "UPLOAD SUCCESS ✅";
+                status.style.color = "#10b981";
+            }
+        } catch (e) { status.innerText = "ERROR!"; } 
+        finally { loader.style.display = "none"; }
+    }
+function addL() {
+        const c = document.getElementById('input-list');
+        const d = document.createElement('div');
+        d.className = "l-row";
+        d.innerHTML = `<input type="text" class="lt nozoom" placeholder="Label"><input type="text" class="lu nozoom" placeholder="URL">`;
+        c.appendChild(d);
+    }
+
+    function goTo(n) {
+        document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + n).classList.add('active');
+    }
+
+    function render(sw) {
+        document.getElementById('out-n').innerText = document.getElementById('in-n').value || "Nama";
+        document.getElementById('out-b').innerText = document.getElementById('in-b').value || "Bio";
+        document.getElementById('out-p').src = cloudImageUrl || document.getElementById('pfp-v').src;
+        
+        const container = 
+document.getElementById('out-l');
+        container.innerHTML = "";
+        const c = document.getElementById('main-c').value;
+        document.querySelectorAll('.l-row').forEach(row => {
+            const t = row.querySelector('.lt').value;
+            const u = row.querySelector('.lu').value;
+            if(t && u) {
+                const a = document.createElement('a');
+                a.className = "v-item-f"; a.href = u.startsWith('http') ? u : 'https://'+u;
+                a.target = "_blank"; a.innerText = t; a.style.background = c;
+                container.appendChild(a);
+            }
+        });
+        if(sw) goTo(2);
+    }
+
+    function openShare() {
+        if(!cloudImageUrl) { alert("Tunggu ✅"); return; }
+        const d = { p: cloudImageUrl, n: document.getElementById('in-n').value, b: document.getElementById('in-b').value, c: document.getElementById('main-c').value, l: [] };
+        document.querySelectorAll('.l-row').forEach(r => {
+            const t = r.querySelector('.lt').value;
+            const u = r.querySelector('.lu').value;
+            if(t && u) d.l.push({t, u});
+        });
+        const e = btoa(unescape(encodeURIComponent(JSON.stringify(d))));
+        document.getElementById('f-url').value = window.location.href.split('?')[0] + "?p=" + e;
+        document.getElementById('m-sh').style.display = 'flex';
+    }
+
+    function copyIt() {
+        const i = document.getElementById('f-url'); i.select(); 
+document.execCommand("copy"); alert("Link Berhasil!");
+    }
+
+    window.onload = () => {
+        const p = new URLSearchParams(window.location.search);
+        if (p.has('p')) {
+            try {
+                const d = JSON.parse(decodeURIComponent(escape(atob(p.get('p')))));
+                document.getElementById('out-n').innerText = d.n;
+                document.getElementById('out-b').innerText = d.b;
+                document.getElementById('out-p').src = d.p;
+                const container = document.getElementById('out-l');
+                d.l.forEach(x => {
+                    const a = document.createElement('a');
+                    a.className = "v-item-f"; a.href = x.u.startsWith('http') ? x.u : 'https://'+x.u;
+                    a.target = "_blank"; a.innerText = x.t; a.style.background = d.c;
+                    container.appendChild(a);
+                });
+                goTo(2);
+                document.querySelector('.nav-viewer-final').style.display = "none";
+            } catch(e) { goTo(1); }
+        }
+    };
+</script>
